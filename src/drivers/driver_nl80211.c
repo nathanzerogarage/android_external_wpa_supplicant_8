@@ -6981,6 +6981,9 @@ static int nl80211_connect_common(struct wpa_driver_nl80211_data *drv,
 		if (params->wpa_proto & WPA_PROTO_WPA)
 			ver |= NL80211_WPA_VERSION_1;
 		if (params->wpa_proto & WPA_PROTO_RSN) {
+#if defined(CONFIG_DISABLE_WPA_VERSION_3)
+			ver |= NL80211_WPA_VERSION_2;
+#else
 #if !defined(CONFIG_DRIVER_NL80211_BRCM) && !defined(CONFIG_DRIVER_NL80211_SYNA)
 			/*
 			 * NL80211_ATTR_SAE_PASSWORD is related and was added
@@ -6993,6 +6996,7 @@ static int nl80211_connect_common(struct wpa_driver_nl80211_data *drv,
 			else
 #endif
 				ver |= NL80211_WPA_VERSION_2;
+#endif
 		}
 
 		wpa_printf(MSG_DEBUG, "  * WPA Versions 0x%x", ver);
